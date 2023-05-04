@@ -1,0 +1,54 @@
+# Step 1: Import libraries
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score
+
+# Step 2: Import Iris dataset
+url = "https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data"
+dataset = pd.read_csv(url, names=['sepal length', 'sepal width', 'petal length', 'petal width', 'target'])
+
+# Step 3: Initialize the data frame
+X = dataset.iloc[:, :-1].values
+y = dataset.iloc[:, -1].values
+
+# Step 4: Data Preprocessing
+# No categorical data to convert
+
+# Check for Null Value
+dataset.isnull().sum()
+
+# Divide the dataset into Independent(X) and Dependent(Y) variables.
+# Split the dataset into training and testing datasets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+
+# Scale the Features if necessary.
+# No need to scale for Naive Bayes
+
+# Step 5: Train the Machine to create model
+# Import the Gaussian Naive Bayes class
+gaussian = GaussianNB()
+# Train the model using the training sets
+gaussian.fit(X_train, y_train)
+
+# Step 6: Predict the y_pred for all values of train_x and test_x
+y_pred = gaussian.predict(X_test)
+
+# Step 7: Evaluate the performance of Model for train_y and test_y
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred, average='micro')
+recall = recall_score(y_test, y_pred, average='micro')
+
+# Step 8: Calculate the required evaluation parameters
+cm = confusion_matrix(y_test, y_pred)
+tp, fp, tn, fn = cm[0][0], cm[0][1], cm[1][1], cm[1][0]
+error_rate = 1 - accuracy
+print("True Positive:", tp)
+print("False Positive:", fp)
+print("True Negative:", tn)
+print("False Negative:", fn)
+print("Accuracy:", accuracy)
+print("Error Rate:", error_rate)
+print("Precision:", precision)
+print("Recall:", recall)
